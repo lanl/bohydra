@@ -13,6 +13,7 @@ This package provides:
 If you wish to minimize an objective, pass the negated function and maximize instead.
 
 
+
 ### Contents
 - emulators.py: EmuGP (single-fidelity) and EmuMF (multi-fidelity/prior) with stable numerics
 - optimizers.py: Opt (BO), OptMF (MF-BO), ConstrainedOpt (constrained BO)
@@ -266,7 +267,7 @@ Tips and troubleshooting
 - Packaging: the repository currently lacks pyproject.toml/setup.py. Use PYTHONPATH or add packaging files before pip install -e .
 
 
-## License
+## License for Reference O4998
 This program is Open-Source under the BSD-3 License.
  
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
