@@ -1,4 +1,4 @@
-# multifidelity_opt
+# bohydra - Many heads, one optimizer: parallel, multi-fidelity Bayesian optimization.
 ==================
 
 Multifidelity Bayesian optimization with serial and MPI-enabled (parallel, asynchronous) workflows.
@@ -36,18 +36,28 @@ Backwards-compatibility aliases are provided: gp_emu, mf_emu, gp_opt/OptGP, mf_o
 ### Install and setup
 Prerequisites: Python 3.9+ recommended.
 
-Option A: Use from source (no packaging files present)
-- Clone/download the repository.
-- In shells where you run examples or your own scripts, point PYTHONPATH to the repo root:
-    export PYTHONPATH=$PWD:$PYTHONPATH
-  Alternatively, prepend the repo root on sys.path as done in the example scripts.
+Standard install from source (with pyproject.toml):
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install -U pip
+    pip install .
 
-Option B: Editable install (if you add packaging later)
-- The repo currently has no pyproject.toml/setup.py. If you add them, you can then:
+For development (editable install):
     python -m venv .venv
     source .venv/bin/activate
     pip install -U pip
     pip install -e .
+
+Optional extras:
+- Include MPI/example dependencies with extras:
+    pip install .[mpi]
+  or
+    pip install -e .[mpi]
+
+Alternative (without install):
+- You can also run via PYTHONPATH during development:
+    export PYTHONPATH=$PWD:$PYTHONPATH
+  Or prepend the repo root on sys.path as shown in the example scripts.
 
 Core dependencies
 - numpy
@@ -70,7 +80,7 @@ Install the extras you need, e.g.:
 This example optimizes a 2D test function in the box [−1,1]^2.
 
     import numpy as np
-    import multifidelity_opt as mf
+    import bohydra as bo
     
     # Objective (maximize). For minimization, negate your function.
     def f_hi(x):
@@ -86,7 +96,7 @@ This example optimizes a 2D test function in the box [−1,1]^2.
     y0 = f_hi(X0)
     
     # Build optimizer (GP emulator)
-    opt = mf.Opt(
+    opt = bo.Opt(
         func=f_hi,
         data_dict={"x": X0, "y": y0, "nugget": 1e-4},
         emulator_type="GP",
@@ -115,8 +125,8 @@ You can train a low-fidelity GP and use it as a prior for the high-fidelity emul
     x_high = rng.uniform(x_lower, x_upper, size=(10, 2))
     y_high = f_hi(x_high)
     
-    low_emu = mf.initialize_emulator("GP", {"x": x_low, "y": y_low, "nugget": 1e-4})
-    opt = mf.Opt(
+    low_emu = bo.initialize_emulator("GP", {"x": x_low, "y": y_low, "nugget": 1e-4})
+    opt = bo.Opt(
         func=f_hi,
         data_dict={"x": x_high, "y": y_high, "prior_emu": low_emu, "nugget": 1e-4},
         emulator_type="MFGP",
@@ -128,7 +138,7 @@ You can train a low-fidelity GP and use it as a prior for the high-fidelity emul
 ### True multi-fidelity BO (OptMF)
 OptMF recommends which fidelity (low vs high) to evaluate next using IECI-style logic and a cost ratio.
 
-    mf_opt = mf.OptMF(
+    mf_opt = bo.OptMF(
         func_low=f_lo,
         func_high=f_hi,
         data_dict={"x": x_high, "y": y_high, "x_low": x_low, "y_low": y_low, "nugget": 1e-4},
@@ -149,7 +159,7 @@ Pass one or more constraint datasets with threshold definitions. Feasibility is 
         x = np.atleast_2d(x)
         return x[:, 0]  # desire x0 <= 0
     
-    const_opt = mf.ConstrainedOpt(
+    const_opt = bo.ConstrainedOpt(
         func=f_hi,
         data_dict={"x": X0, "y": y0, "nugget": 1e-4},
         constraint_dicts=[
@@ -178,7 +188,7 @@ Run from the repository root (requires mpi4py, pandas, pyDOE):
 
 Coordinator signature:
 
-    from multifidelity_opt import bo_coordinator
+    from bohydra import bo_coordinator
     bo_coordinator(
         n_total=100,      # total number of runs (including initial design)
         n_init=10,        # initial LHS samples
@@ -189,7 +199,7 @@ Coordinator signature:
 
 Worker signature:
 
-    from multifidelity_opt import bo_worker
+    from bohydra import bo_worker
     
     def get_target(x, job_id=None):
         # x is a 1D numpy array; return a scalar float
@@ -264,7 +274,7 @@ Tips and troubleshooting
 - Kernel: RBF (squared exponential) with per-dimension positive lengthscales; a light Gaussian prior regularizes log-lengthscales during fit.
 - Missing dependencies: if mpi4py is not present, importing bo_worker/bo_coordinator will raise an ImportError with guidance. Install mpi4py and run under mpiexec/mpirun.
 - pyDOE is required for LHS in the MPI coordinator: pip install pyDOE
-- Packaging: the repository currently lacks pyproject.toml/setup.py. Use PYTHONPATH or add packaging files before pip install -e .
+- If you installed via pip using pyproject.toml, you can import bohydra directly. For development without installation, use PYTHONPATH as shown above.
 
 
 ## License for Reference O4998

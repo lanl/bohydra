@@ -2,7 +2,7 @@ import time
 import numpy as np
 import sys
 sys.path.append("../../.")
-import multifidelity_opt as mf
+import bohydra as bo
 
 
 def hi(x):
@@ -39,7 +39,7 @@ def main():
 
     t_start = time.time()
     data_dict = {"x": x_high, "y": y_high, "nugget": 1e-4}
-    high_opt = mf.Opt(
+    high_opt = bo.Opt(
         hi,
         data_dict,
         emulator_type="GP",
@@ -63,7 +63,7 @@ def main():
     t_start = time.time()
 
     low_dict = {"x": x_low, "y": y_low, "nugget": 1e-4}
-    low_emu = mf.initialize_emulator("GP", low_dict)
+    low_emu = bo.initialize_emulator("GP", low_dict)
 
     data_dict = {
         "x": x_high,
@@ -71,7 +71,7 @@ def main():
         "prior_emu": low_emu,
         "nugget": 1e-4,
     }
-    high_opt = mf.Opt(
+    high_opt = bo.Opt(
         hi,
         data_dict,
         emulator_type="MFGP",

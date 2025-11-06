@@ -2,7 +2,7 @@ import sys
 sys.path.append("../../.")
 import numpy as np
 import pandas as pd
-import multifidelity_opt as mf
+import bohydra as bo
 
 
 def six_hump_camel(x):
@@ -33,7 +33,7 @@ def main():
     y0 = six_hump_camel(X0)
 
     data_dict = {"x": X0, "y": y0, "nugget": 1e-4}
-    opt = mf.Opt(
+    opt = bo.Opt(
         six_hump_camel,
         data_dict,
         emulator_type="GP",
@@ -67,7 +67,7 @@ def main():
         # Update optimizer state in place
         opt.data["x"] = np.vstack([opt.emulator.x, x_cand])
         opt.data["y"] = np.hstack([opt.emulator.y, y_new])
-        opt.emulator = mf.initialize_emulator(opt.emu_type, opt.data)
+        opt.emulator = bo.initialize_emulator(opt.emu_type, opt.data)
 
         rows.append(
             {

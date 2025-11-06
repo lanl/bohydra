@@ -1,6 +1,6 @@
 from mpi4py import MPI
 import numpy as np
-import multifidelity_opt as mf
+import bohydra as bo
 
 
 def get_target(x):
@@ -35,14 +35,14 @@ def main():
         # Define bounds explicitly: list of [low, high] for each parameter
         n_params = 8
         bounds = [[-5.0, 5.0]] * n_params
-        mf.bo_coordinator(
+        bo.bo_coordinator(
             n_total=1000,
             n_init=50,
             n_params=n_params,
             bounds=bounds,
         )
     else:
-        mf.bo_worker(get_target)
+        bo.bo_worker(get_target)
 
 
 if __name__ == "__main__":

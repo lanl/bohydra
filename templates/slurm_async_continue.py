@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-import multifidelity_opt as mf
+import bohydra as bo
 
 from .slurm_async_opt import (
     launch_simulation,
@@ -59,7 +59,7 @@ def main():
 
     # Initialize optimizer with valid points only
     data_dict = {"x": valid_x, "y": valid_y, "nugget": 1e-4}
-    simulation_opt = mf.Opt(get_target, data_dict, emulator_type="GP")
+    simulation_opt = bo.Opt(get_target, data_dict, emulator_type="GP")
 
     running_ids = []
     running_cands = []
@@ -114,7 +114,7 @@ def main():
                 # Update optimizer with successful evaluation
                 simulation_opt.data["x"] = np.vstack([simulation_opt.emulator.x, cand])
                 simulation_opt.data["y"] = np.hstack([simulation_opt.emulator.y, new_target])
-                simulation_opt.emulator = mf.initialize_emulator(
+                simulation_opt.emulator = bo.initialize_emulator(
                     simulation_opt.emu_type, simulation_opt.data
                 )
             else:

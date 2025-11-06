@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../../.")
 import numpy as np
-import multifidelity_opt as mf
+import bohydra as bo
 
 
 def test_function(x):
@@ -44,7 +44,7 @@ def main():
         }
     ]
 
-    const_opt = mf.ConstrainedOpt(
+    const_opt = bo.ConstrainedOpt(
         func=test_function,
         data_dict=data_dict,
         constraint_dicts=const_dicts,

@@ -1,6 +1,6 @@
 from mpi4py import MPI
 import numpy as np
-import multifidelity_opt as mf
+import bohydra as bo
 
 
 def get_target(x, _job_id=None):
@@ -24,7 +24,7 @@ def main():
 
     if rank == 0:
         # If supported by your coordinator, set a seed for reproducibility
-        mf.bo_coordinator(
+        bo.bo_coordinator(
             n_total=100,
             n_init=5,
             n_params=2,
@@ -32,7 +32,7 @@ def main():
             # random_state=0,  # uncomment if supported
         )
     else:
-        mf.bo_worker(get_target)
+        bo.bo_worker(get_target)
 
 
 if __name__ == "__main__":

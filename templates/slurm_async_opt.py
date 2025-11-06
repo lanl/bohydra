@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import qmc
 
-import multifidelity_opt as mf
+import bohydra as bo
 
 # USER CONFIGURATION (edit these for your environment)
 base_path = '/path/to/run/directory/'  # absolute or resolved path to the working directory
@@ -172,7 +172,7 @@ def main():
 
     # Prepare optimizer with valid data only
     data_dict = {'x': valid_x, 'y': valid_y, 'nugget': 1.0e-4}
-    simulation_opt = mf.Opt(get_target, data_dict, emulator_type='GP', random_state=0)
+    simulation_opt = bo.Opt(get_target, data_dict, emulator_type='GP', random_state=0)
 
     running_cases = []
     running_cands = []
@@ -222,7 +222,7 @@ def main():
         else:
             simulation_opt.data['x'] = np.vstack([simulation_opt.emulator.x, candidate])
             simulation_opt.data['y'] = np.concatenate([simulation_opt.emulator.y, [new_target]])
-            simulation_opt.emulator = mf.initialize_emulator(simulation_opt.emu_type, simulation_opt.data)
+            simulation_opt.emulator = bo.initialize_emulator(simulation_opt.emu_type, simulation_opt.data)
 
         # Update ledger
         new_df = pd.DataFrame([dict(zip(param_names, candidate.tolist())) | {'Target': new_target}])

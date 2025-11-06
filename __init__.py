@@ -1,5 +1,5 @@
 """
-multifidelity_opt: Multifidelity Bayesian optimization with serial and MPI-enabled optimizers.
+bohydra: Multifidelity Bayesian optimization with serial and MPI-enabled optimizers.
 
 Primary public API:
 - Emulators: EmuGP, EmuMF, initialize_emulator
@@ -16,7 +16,7 @@ from importlib import metadata as _metadata
 
 # Version: try to read from package metadata; fallback if missing (e.g., during editable installs)
 try:
-    __version__ = _metadata.version("multifidelity_opt")
+    __version__ = _metadata.version("bohydra")
 except Exception:
     __version__ = "0.0.0"
 

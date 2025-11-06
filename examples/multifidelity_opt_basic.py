@@ -1,5 +1,5 @@
 import numpy as np
-import multifidelity_opt as mf
+import bohydra as bo
 
 
 def hi(x):
@@ -43,7 +43,7 @@ def main():
         "nugget": 1e-4,
     }
 
-    mf_opt = mf.OptMF(
+    mf_opt = bo.OptMF(
         func_low=low,
         func_high=hi,
         data_dict=data_dict,
