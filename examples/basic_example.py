@@ -1,7 +1,5 @@
 import time
 import numpy as np
-import sys
-sys.path.append("../../.")
 import bohydra as bo
 
 

@@ -40,14 +40,14 @@ def main():
         "y": y_high,
         "x_low": x_low,
         "y_low": y_low,
-        "nugget": 1e-4,
+        "nugget": 1e-5,
     }
 
     mf_opt = bo.OptMF(
         func_low=low,
         func_high=hi,
         data_dict=data_dict,
-        emulator_type="MFGP",
+        emulator_type="MFGPOld",
         x_lower=x_lower,
         x_upper=x_upper,
         random_state=0,
@@ -56,8 +56,15 @@ def main():
     # Fixed reference set reused across iterations
     x_ref = rng.uniform(x_lower, x_upper, size=(200, 2))
 
-    for _ in range(10):
-        mf_opt.run_opt(x_reference=x_ref, iterations=1, cost_ratio=0.5)
+    best_h = np.argmax(mf_opt.emulator.y)
+    print(
+        "Best Initial Case:",
+        mf_opt.emulator.x[best_h, :],
+        mf_opt.emulator.y[best_h],
+    )
+
+    for _ in range(30):
+        mf_opt.run_opt(x_reference=x_ref, iterations=1, cost_ratio=0.9)
         # Best high-fidelity observed so far
         best_h = np.argmax(mf_opt.emulator.y)
         # Last evaluation info by fidelity

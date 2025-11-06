@@ -9,9 +9,8 @@ description = "Multifidelity Bayesian optimization with serial and MPI-enabled (
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = ["bayesian-optimization", "gaussian-process", "multi-fidelity", "mpi", "asynchronous"]
-# authors and license can be added later if desired
-# authors = [{name = "", email = ""}]
-# license = {file = "LICENSE"}
+authors = [{name = "Mike Grosskopf", email = "mikegros@lanl.gov"}]
+license = {file = "LICENSE"}
 
 # Core runtime dependencies
 dependencies = [
@@ -32,8 +31,9 @@ examples = [
 ]
 
 [project.urls]
-Homepage = ""
+Homepage = "https://github.com/lanl/bohydra"
 Repository = "https://github.com/lanl/bohydra"
+"Bug Tracker" = "https://github.com/lanl/bohydra/issues"
 
 [tool.setuptools]
 include-package-data = true

@@ -1,5 +1,3 @@
-import sys
-sys.path.append("../../.")
 import numpy as np
 import bohydra as bo
 
@@ -23,7 +21,7 @@ def constraint_function(x):
 
 
 def main():
-    rng = np.random.default_rng(23432)
+    rng = np.random.default_rng(234)
 
     # Problem domain and initial design
     x_lower = np.array([-1.0, -1.0])

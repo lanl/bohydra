@@ -2,7 +2,7 @@ import numpy as np
 
 from scipy.optimize import minimize
 from scipy.stats import norm
-from .emulators import EmuGP, EmuMF, initialize_emulator
+from .emulators import EmuGP, EmuMF, EmuMFOld, initialize_emulator
 from .utils import log_h
 
 
@@ -161,8 +161,8 @@ class OptMF:
 
     Parameters
     - func_low, func_high: Callables for low/high fidelity evaluations.
-    - data_dict: For MFGP: keys {"x_low", "y_low", "x", "y", (optional) "nugget"}.
-    - emulator_type: Must be "MFGP".
+    - data_dict: For MFGPOld: keys {"x_low", "y_low", "x", "y", (optional) "nugget"}.
+    - emulator_type: Must be "MFGPOld".
     - Bounds: If None, derived from x_low range.
     - random_state: Seed for reproducibility.
     """
@@ -172,13 +172,13 @@ class OptMF:
         func_low,
         func_high,
         data_dict,
-        emulator_type="MFGP",
+        emulator_type="MFGPOld",
         x_lower=None,
         x_upper=None,
         nugget=default_nugget,
         random_state=None,
     ):
-        if emulator_type not in ["MFGP"]:
+        if emulator_type not in ["MFGPOld"]:
             raise ValueError(
                 "Emulator " + emulator_type + " not implemented for multifidelity optimization"
             )
@@ -189,7 +189,7 @@ class OptMF:
         self.emu_type = emulator_type
         self.rng = np.random.default_rng(random_state)
 
-        if "nugget" not in list(data_dict.keys()) and emulator_type in ["MFGP"]:
+        if "nugget" not in list(data_dict.keys()) and emulator_type in ["EmuMFOld"]:
             data_dict["nugget"] = nugget
 
         self.emulator = initialize_emulator(emulator_type, data_dict)
@@ -214,7 +214,7 @@ class OptMF:
         normrv = norm()
         test_mean = self.emulator.predict(x_test[None, :])[0]
         pm = self.emulator.predict(x_reference)[0]
-        tmp_gp = EmuMF(
+        tmp_gp = EmuMFOld(
             x_low=self.emulator.x_low,
             y_low=self.emulator.y_low,
             x=np.vstack([self.emulator.x, x_test]),
@@ -236,7 +236,7 @@ class OptMF:
         normrv = norm()
         test_mean = self.emulator.predict(x_test[None, :])[0]
         pm = self.emulator.predict(x_reference)[0]
-        tmp_gp = EmuMF(
+        tmp_gp = EmuMFOld(
             x_low=np.vstack([self.emulator.x_low, x_test]),
             y_low=np.hstack([self.emulator.y_low, test_mean]),
             x=self.emulator.x,
@@ -267,17 +267,19 @@ class OptMF:
             self.iecis_high[ii] = self.ieci_high(
                 x_reference[self.refi[ii], :], explore_discount, x_reference
             )
-        offset = np.min([self.iecis_low.min(), self.iecis_high.min()])
-        best_low = np.argmin(self.iecis_low)
-        best_high = np.argmin(self.iecis_high)
-        self.iecis_high -= offset
-        self.iecis_low -= offset
-        if (np.max(self.iecis_high)) / (np.max(self.iecis_low) + _EPS) > cost_ratio:
+        # offset = np.min([self.iecis_low.min(), self.iecis_high.min()])
+        best_low_ind = np.argmin(self.iecis_low)
+        best_high_ind = np.argmin(self.iecis_high)
+        best_low_val = np.min(self.iecis_low)
+        best_high_val = np.min(self.iecis_high)
+        # self.iecis_high -= offset
+        # self.iecis_low -= offset
+        if best_high_val / (best_low_val + _EPS) <= cost_ratio:
             ret_type = "high"
-            best_ind = self.refi[best_high]
+            best_ind = self.refi[best_high_ind]
         else:
             ret_type = "low"
-            best_ind = self.refi[best_low]
+            best_ind = self.refi[best_low_ind]
         return (x_reference[best_ind, :], ret_type)
 
     def run_opt(self, x_reference, iterations=1, cost_ratio=1, subsample_ref=1.0, explore_discount=1.0):
@@ -373,5 +375,5 @@ class ConstrainedOpt(Opt):
             self.iecis[ii] = np.log(base) + self.c_weight * self.constraint_logprob(
                 x_reference[self.refi[ii], :]
             )
-        best_ind = self.refi[np.argmax(self.iecis)]
+        best_ind = self.refi[np.argmin(self.iecis)]
         return x_reference[best_ind, :]
