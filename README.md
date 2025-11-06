@@ -1,7 +1,13 @@
-# bohydra - Many heads, one optimizer: parallel, multi-fidelity Bayesian optimization.
-==================
-
-<img src="https://github.com/lanl/bohydra/raw/main/logo/bohydra.png" alt="bohydra logo" width="200" height="200">
+<table>
+  <tr>
+    <td style="padding-right: 20px; vertical-align: middle;">
+      <img src="https://github.com/lanl/bohydra/raw/main/logo/bohydra.png" alt="bohydra logo" width="200" height="200">
+    </td>
+    <td style="vertical-align: middle;">
+      <h3>Many heads, one optimizer: parallel, multi-fidelity Bayesian optimization.</h3>
+    </td>
+  </tr>
+</table>
 
 Multifidelity Bayesian optimization with serial and MPI-enabled (parallel, asynchronous) workflows.
 
