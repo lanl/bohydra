@@ -11,6 +11,7 @@
 
 Multifidelity Bayesian optimization with serial and MPI-enabled (parallel, asynchronous) workflows.
 
+
 This package provides:
 - Gaussian process (GP) emulators for single- and multi-fidelity modeling
 - Bayesian optimization (BO) for maximization with Expected Improvement (EI)
@@ -20,7 +21,7 @@ This package provides:
 
 If you wish to minimize an objective, pass the negated function and maximize instead.
 
-
+<mark>This package was previously known as <mark>MultifidelityOpt during development. </mark>
 
 ### Contents
 - emulators.py: EmuGP (single-fidelity) and EmuMF (multi-fidelity/prior) with stable numerics
