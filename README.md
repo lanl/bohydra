@@ -30,7 +30,6 @@ If you wish to minimize an objective, pass the negated function and maximize ins
 - utils.py: numeric helpers and running_max
 - examples/: runnable examples for each capability
 - templates/: SLURM/MPI helper scripts (optional)
-- doc/: quick usage snippets
 
 The public API is re-exported from the package root:
 - EmuGP, EmuMF, initialize_emulator
