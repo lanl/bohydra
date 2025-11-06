@@ -1,4 +1,6 @@
 # Files to ignore
+bohydra.egg-info
+dist
 .DS_store
 *checkpoint.*
 *.csv
