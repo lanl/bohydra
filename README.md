@@ -21,7 +21,7 @@ This package provides:
 
 If you wish to minimize an objective, pass the negated function and maximize instead.
 
-<mark>This package was previously known as <mark>MultifidelityOpt during development. </mark>
+<mark>This package was previously known as **MultifidelityOpt** during development. </mark>
 
 ### Contents
 - emulators.py: EmuGP (single-fidelity) and EmuMF (multi-fidelity/prior) with stable numerics
