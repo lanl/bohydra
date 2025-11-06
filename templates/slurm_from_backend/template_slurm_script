@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH --time=12:00:00
+#SBATCH --nodes=1
+
+# Run your simulator
+#     whatever needs to happen can happen in here
+srun -n 32 $SIMULATUION_EXECUTABLE --input=input.deck
+
+# After your simulator is done call BO_continue.py
+#     which will load the current logs of completed data and running cases
+#     build a surrogate model, select the new candidate, set up the new
+#     candidate based on the wrapper provided, and launch it.
+python BO_continue.py
+
