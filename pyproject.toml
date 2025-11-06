@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+requires = ["setuptools>=64", "setuptools-git-versioning>=2.0,<3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "bohydra"
-version = "0.1.1"
+dynamic = ["version"]
 description = "Multifidelity Bayesian optimization with serial and MPI-enabled (parallel, asynchronous) workflows."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -39,3 +39,6 @@ Repository = "https://github.com/lanl/bohydra"
 include-package-data = true
 packages = ["bohydra"]
 package-dir = { bohydra = "." }
+
+[tool.setuptools-git-versioning]
+enabled = true
